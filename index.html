@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>30階層の魔王 Ver0.6</title>
+<title>30階層の魔王 Ver0.7</title>
 
 <style>
+
 body{
     margin:0;
     padding:20px;
@@ -63,6 +64,20 @@ button:active{
     min-height:100px;
     line-height:1.6;
 }
+
+.sprite svg{
+    width:120px;
+    height:120px;
+    image-rendering: pixelated;
+}
+
+#battleVisuals{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    margin-bottom:15px;
+}
+
 </style>
 </head>
 
@@ -70,6 +85,7 @@ button:active{
 
 <div class="container">
 
+<!-- メニュー -->
 <div id="menuScreen">
 
 <h1>30階層の魔王</h1>
@@ -84,6 +100,7 @@ button:active{
 
 </div>
 
+<!-- ゲーム画面 -->
 <div id="gameScreen" style="display:none;">
 
 <h1>30階層の魔王</h1>
@@ -109,6 +126,14 @@ button:active{
 </div>
 
 <div class="panel">
+
+<div id="battleVisuals">
+
+<div id="playerSprite"></div>
+
+<div id="enemySprite"></div>
+
+</div>
 
 <div class="enemy-name" id="enemyName"></div>
 
@@ -162,17 +187,17 @@ const enemyNames = [
 ];
 
 const weapons = [
-    {name:"木の剣", power:1, rate:12},
-    {name:"鉄の剣", power:2, rate:5},
-    {name:"鋼の剣", power:3, rate:2},
-    {name:"伝説の剣", power:4, rate:1}
+    {name:"木の剣", power:1, rate:18},
+    {name:"鉄の剣", power:2, rate:12},
+    {name:"鋼の剣", power:3, rate:7},
+    {name:"伝説の剣", power:4, rate:3}
 ];
 
 const armors = [
-    {name:"木の鎧", power:1, rate:12},
-    {name:"鉄の鎧", power:2, rate:5},
-    {name:"鋼の鎧", power:3, rate:2},
-    {name:"伝説の鎧", power:4, rate:1}
+    {name:"木の鎧", power:1, rate:18},
+    {name:"鉄の鎧", power:2, rate:12},
+    {name:"鋼の鎧", power:3, rate:7},
+    {name:"伝説の鎧", power:4, rate:3}
 ];
 
 const eventPool = [
@@ -192,7 +217,7 @@ function startGame(){
     player = {
         maxHp:30,
         hp:30,
-        atk:5,
+        atk:10,
         def:0,
         crit:10,
 
@@ -273,6 +298,8 @@ function createEnemy(){
         enemy.def = 8;
         enemy.crit = 35;
     }
+
+    drawSprites();
 
     updateUI();
 }
@@ -582,7 +609,7 @@ function upgrade(type){
 
 function restEvent(){
 
-    let heal = Math.floor(player.maxHp * 0.5);
+    let heal = Math.floor(player.maxHp * 0.8);
 
     player.hp += heal;
 
@@ -599,69 +626,77 @@ function gatherEvent(){
 
     let text = "";
 
-    if(rand < 0.5){
+    if(rand < 0.35){
 
         inventory.potion++;
+
         text = "回復薬を発見した。";
     }
-    else if(rand < 0.8){
+    else if(rand < 0.6){
 
         inventory.bomb++;
+
         text = "爆薬を発見した。";
     }
     else{
 
-        let equipmentRoll = Math.random()*100;
-
         let equipmentList =
         Math.random() < 0.5 ? weapons : armors;
 
+        let roll = Math.random() * 100;
+
+        let selected = null;
+
+        let total = 0;
+
         for(let equip of equipmentList){
 
-            if(equipmentRoll <= equip.rate){
+            total += equip.rate;
 
-                if(equipmentList === weapons){
-
-                    if(equip.power > player.weapon.power){
-
-                        player.atk +=
-                        equip.power - player.weapon.power;
-
-                        player.weapon = equip;
-
-                        text =
-                        `${equip.name}を装備した！`;
-                    }
-                    else{
-                        text =
-                        `${equip.name}を発見したが使わなかった。`;
-                    }
-                }
-                else{
-
-                    if(equip.power > player.armor.power){
-
-                        player.def +=
-                        equip.power - player.armor.power;
-
-                        player.armor = equip;
-
-                        text =
-                        `${equip.name}を装備した！`;
-                    }
-                    else{
-                        text =
-                        `${equip.name}を発見したが使わなかった。`;
-                    }
-                }
-
+            if(roll <= total){
+                selected = equip;
                 break;
             }
         }
 
-        if(text === ""){
-            inventory.potion++;
-            text = "何も見つからず回復薬を拾った。";
+        if(selected){
+
+            if(equipmentList === weapons){
+
+                if(selected.power > player.weapon.power){
+
+                    player.atk +=
+                    selected.power - player.weapon.power;
+
+                    player.weapon = selected;
+
+                    text =
+                    `${selected.name}を装備した！`;
+                }
+                else{
+
+                    text =
+                    `${selected.name}を見つけたが使わなかった。`;
+                }
+            }
+            else{
+
+                if(selected.power > player.armor.power){
+
+                    player.def +=
+                    selected.power - player.armor.power;
+
+                    player.armor = selected;
+
+                    text =
+                    `${selected.name}を装備した！`;
+                }
+                else{
+
+                    text =
+                    `${selected.name}を見つけたが使わなかった。`;
+                }
+            }
         }
     }
 
@@ -678,7 +713,23 @@ function timeEvent(){
 
     player.hp = player.maxHp;
 
-    nextFloor("時が巻き戻る...HPが全回復した。");
+    document.getElementById("choiceArea").style.display =
+    "none";
+
+    closeItemArea();
+
+    document.getElementById("attackBtn").style.display =
+    "block";
+
+    document.getElementById("itemBtn").style.display =
+    "block";
+
+    createEnemy();
+
+    document.getElementById("log").innerHTML =
+    "時が巻き戻る...HPが全回復した。";
+
+    updateUI();
 }
 
 function nextFloor(message){
@@ -702,6 +753,72 @@ function nextFloor(message){
     message + "<br><br>次の敵が現れた。";
 
     updateUI();
+}
+
+function drawSprites(){
+
+    document.getElementById("playerSprite").innerHTML =
+    `
+    <div class="sprite">
+    <svg viewBox="0 0 64 64">
+
+    <rect x="20" y="28" width="24" height="28" fill="#2244aa"/>
+
+    <rect x="24" y="12" width="16" height="16" fill="#ffcc99"/>
+
+    <rect x="28" y="18" width="2" height="2" fill="#000"/>
+    <rect x="34" y="18" width="2" height="2" fill="#000"/>
+
+    <rect x="22" y="8" width="20" height="6" fill="#663300"/>
+
+    <rect x="46" y="24" width="4" height="20" fill="#cccccc"/>
+
+    <rect x="14" y="28" width="6" height="12" fill="#996633"/>
+
+    </svg>
+    </div>
+    `;
+
+    let color = "#33cc33";
+
+    if(enemy.name === "ゴブリン"){
+        color = "#88cc22";
+    }
+
+    if(enemy.name === "オーク"){
+        color = "#559933";
+    }
+
+    if(enemy.name === "骸骨兵"){
+        color = "#dddddd";
+    }
+
+    if(enemy.name === "ドラゴン"){
+        color = "#cc3333";
+    }
+
+    if(enemy.name === "魔王"){
+        color = "#9933cc";
+    }
+
+    document.getElementById("enemySprite").innerHTML =
+    `
+    <div class="sprite">
+    <svg viewBox="0 0 64 64">
+
+    <rect x="20" y="10" width="24" height="20" fill="${color}"/>
+
+    <rect x="26" y="18" width="3" height="3" fill="#fff"/>
+    <rect x="35" y="18" width="3" height="3" fill="#fff"/>
+
+    <rect x="18" y="30" width="28" height="20" fill="${color}"/>
+
+    <rect x="20" y="50" width="6" height="10" fill="${color}"/>
+    <rect x="38" y="50" width="6" height="10" fill="${color}"/>
+
+    </svg>
+    </div>
+    `;
 }
 
 </script>
