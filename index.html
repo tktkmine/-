@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-user-scalable=no">
+content="width=device-width,initial-scale=1.0">
 
-<title>30階層の魔王 Ver2.3</title>
+<title>時巡りの勇者</title>
 
 <link rel="stylesheet"
 href="style.css">
-
 </head>
 
 <body>
 
-<!-- MENU -->
+<!-- =========================
+MENU
+========================= -->
 
 <div id="menuScene"
 class="scene">
@@ -27,162 +23,67 @@ class="scene">
 <div class="menu-box">
 
 <div class="menu-title">
-
-30階層の魔王
-
+時巡りの勇者
 </div>
-
-<p>
-
-勇者は30階層に潜む<br>
-魔王討伐を目指す。
-
-</p>
 
 <button class="menu-btn"
 onclick="startGame()">
-
 ゲーム開始
-
 </button>
 
-<button onclick="openHelp()">
-
+<button
+onclick="openHelp()">
 ヘルプ / 図鑑
-
 </button>
 
 <div class="version">
-
-Ver2.3
-
+Ver 2.4.2
 </div>
 
 </div>
-
 </div>
 
-<!-- HELP -->
-
-<div id="helpScene"
-class="scene">
-
-<div class="panel help-panel">
-
-<h2>
-ヘルプ / 図鑑
-</h2>
-
-<div class="help-scroll">
-
-<h3>
-■ 行動説明
-</h3>
-
-<p>
-【成長】<br>
-能力を強化する
-</p>
-
-<p>
-【休息】<br>
-最大HPの80%回復
-</p>
-
-<p>
-【採取】<br>
-アイテムや装備を発見
-</p>
-
-<p>
-【時巡り】<br>
-5階層戻る代わりにHP全快
-</p>
-
-<h3>
-■ アイテム図鑑
-</h3>
-
-<p>
-回復薬<br>
-HPを20回復
-</p>
-
-<p>
-爆薬<br>
-敵へ20ダメージ
-</p>
-
-<h3>
-■ 武器図鑑
-</h3>
-
-<p>木の剣 ATK+1</p>
-<p>鉄の剣 ATK+2</p>
-<p>鋼の剣 ATK+3</p>
-<p>伝説の剣 ATK+4</p>
-
-<h3>
-■ 防具図鑑
-</h3>
-
-<p>木の鎧 DEF+1</p>
-<p>鉄の鎧 DEF+2</p>
-<p>鋼の鎧 DEF+3</p>
-<p>伝説の鎧 DEF+4</p>
-
-</div>
-
-<button onclick="closeHelp()">
-
-戻る
-
-</button>
-
-</div>
-
-</div>
-
-<!-- GAME -->
+<!-- =========================
+GAME
+========================= -->
 
 <div id="gameScene"
 class="scene">
 
-<div class="panel topbar">
+<div class="topbar">
 
 <div id="floor">
-
 1階層
-
 </div>
 
 <button class="help-btn"
 onclick="openHelp()">
-
 ？
-
 </button>
 
 </div>
 
-<div class="panel battle-area">
+<!-- =========================
+BATTLE
+========================= -->
+
+<div class="battle-area">
 
 <!-- PLAYER -->
 
 <div class="character-box">
 
-<div id="playerSprite"></div>
+<div id="playerSprite">
+</div>
 
 <div class="hpbar">
-
 <div id="playerHpBar"
 class="hpfill">
 </div>
-
 </div>
 
-<div class="status-mini"
-id="playerStats">
+<div id="playerStats"
+class="status-mini">
 </div>
 
 </div>
@@ -191,93 +92,96 @@ id="playerStats">
 
 <div class="character-box">
 
-<div id="enemySprite"></div>
+<div id="enemySprite">
+</div>
 
 <div class="hpbar">
-
 <div id="enemyHpBar"
 class="hpfill enemy">
 </div>
-
 </div>
-
-<div class="status-mini">
 
 <div class="enemy-name"
 id="enemyName">
+敵
 </div>
 
-<div id="enemyStats"></div>
-
+<div id="enemyStats"
+class="status-mini">
 </div>
 
 </div>
 
 </div>
 
-<div class="panel info-area">
+<!-- =========================
+INFO
+========================= -->
+
+<div class="info-area">
 
 <div class="info-box">
 
-⚔ 装備
+<b>アイテム</b>
+
+<div id="inventory"
+class="inventory-list">
+</div>
+
+</div>
+
+<div class="info-box">
+
+<b>装備</b>
 
 <div id="equipment">
-
-武器：なし<br>
-防具：なし
-
-</div>
-
-</div>
-
-<div class="info-box">
-
-🎒 アイテム
-
-<div class="inventory-list"
-id="inventory">
 </div>
 
 </div>
 
 </div>
 
-<div class="panel log"
-id="log">
+<!-- =========================
+LOG
+========================= -->
 
-ダンジョンへ潜入した。
-
+<div id="log"
+class="panel log">
+戦闘開始！
 </div>
+
+<!-- =========================
+BOTTOM
+========================= -->
 
 <div class="bottom-area">
 
 <button id="attackBtn"
 onclick="attack()">
-
 攻撃
-
 </button>
 
 <button id="itemBtn"
 class="item-btn"
 onclick="toggleItems()">
-
-アイテム使用
-
+アイテム
 </button>
 
 <div id="itemArea"
 style="display:none;">
 
-<button onclick="usePotion()">
+<button
+onclick="usePotion()">
 回復薬
 </button>
 
-<button onclick="useBomb()">
+<button
+onclick="useBomb()">
 爆薬
 </button>
 
-<button onclick="closeItemArea()">
+<button
+onclick="closeItemArea()">
 戻る
 </button>
 
@@ -288,23 +192,104 @@ class="choice"
 style="display:none;">
 </div>
 
+</div>
+
 <div id="resultArea"
 style="display:none;">
 
-<button class="menu-btn"
+<button
 onclick="returnToMenu()">
-
-メインメニューへ戻る
-
+メインメニューへ
 </button>
 
 </div>
 
 </div>
 
+<!-- =========================
+HELP
+========================= -->
+
+<div id="helpScene"
+class="scene">
+
+<div class="help-panel panel">
+
+<h2>ヘルプ / 図鑑</h2>
+
+<div class="help-scroll">
+
+<h3>行動説明</h3>
+
+<p>
+【成長】<br>
+能力を強化する
+</p>
+
+<p>
+【休息】<br>
+HPを大きく回復
+</p>
+
+<p>
+【採取】<br>
+アイテムや装備を発見
+</p>
+
+<p>
+【時巡り】<br>
+5階層戻る代わりにHP全快<br>
+低確率で時の番人と遭遇
+</p>
+
+<p>
+【時空の渦】<br>
+何が起こるかわからない危険な現象<br>
+低確率で時の番人と遭遇
+</p>
+
+<h3>アイテム</h3>
+
+<p>
+【回復薬】<br>
+HPを20回復
+</p>
+
+<p>
+【爆薬】<br>
+敵へ20ダメージ
+</p>
+
+<h3>武器</h3>
+
+<p>
+木の剣 +1<br>
+鉄の剣 +2<br>
+鋼の剣 +3<br>
+伝説の剣 +4
+</p>
+
+<h3>防具</h3>
+
+<p>
+木の鎧 +1<br>
+鉄の鎧 +2<br>
+鋼の鎧 +3<br>
+伝説の鎧 +4
+</p>
+
 </div>
 
-<script src="script.js"></script>
+<button
+onclick="closeHelp()">
+戻る
+</button>
+
+</div>
+</div>
+
+<script src="script.js">
+</script>
 
 </body>
 </html>
