@@ -1,295 +1,127 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>幻界大戦</title>
 
-<title>時巡りの勇者</title>
-
-<link rel="stylesheet"
-href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <div id="app">
 
-<!-- =========================
-MENU
-========================= -->
+    <header>
+      <h1>幻界大戦</h1>
+      <p class="subtitle">GENKAI TAISEN</p>
+    </header>
 
-<div id="menuScene"
-class="scene">
+    <main id="battle-screen">
 
-<div class="menu-box">
+      <!-- 敵モンスター -->
+      <section class="monster enemy">
 
-<div class="menu-title">
-時巡りの勇者
-</div>
+        <h2 id="enemy-name">
+          敵モンスター
+        </h2>
 
-<button class="menu-btn"
-onclick="startGame()">
-ゲーム開始
-</button>
+        <div class="rank" id="enemy-rank">
+          A
+        </div>
 
-<button
-onclick="openHelp()">
-ヘルプ / 図鑑
-</button>
+        <div class="hp-bar">
+          <div
+            id="enemy-hp-fill"
+            class="hp-fill">
+          </div>
+        </div>
 
-<div class="version">
-Ver 2.4.2
-</div>
+        <p id="enemy-hp-text">
+          HP: 100 / 100
+        </p>
 
-</div>
-</div>
+        <p
+          id="enemy-desc"
+          class="description">
+        </p>
 
-<!-- =========================
-GAME
-========================= -->
+      </section>
 
-<div id="gameScene"
-class="scene">
+      <!-- ゲージ -->
+      <section class="gauge-section">
 
-<div class="topbar">
+        <div class="gauge-container">
+          <div id="gauge-bar"></div>
+        </div>
 
-<div id="floor">
-1階層
-</div>
+        <button id="stop-btn">
+          STOP
+        </button>
 
-<button class="help-btn"
-onclick="openHelp()">
-？
-</button>
+        <p id="multiplier-text">
+          倍率: x1.0
+        </p>
 
-</div>
+      </section>
 
-<!-- =========================
-BATTLE
-========================= -->
+      <!-- プレイヤー -->
+      <section class="monster player">
 
-<div class="battle-area">
+        <h2 id="player-name">
+          プレイヤー
+        </h2>
 
-<!-- PLAYER -->
+        <div class="rank" id="player-rank">
+          A
+        </div>
 
-<div class="character-box">
+        <div class="hp-bar">
+          <div
+            id="player-hp-fill"
+            class="hp-fill">
+          </div>
+        </div>
 
-<div id="playerSprite">
-</div>
+        <p id="player-hp-text">
+          HP: 100 / 100
+        </p>
 
-<div class="hpbar">
-<div id="playerHpBar"
-class="hpfill">
-</div>
-</div>
+        <p
+          id="player-desc"
+          class="description">
+        </p>
 
-<div id="playerStats"
-class="status-mini">
-</div>
+      </section>
 
-</div>
+      <!-- 行動ボタン -->
+      <section class="actions">
 
-<!-- ENEMY -->
+        <button id="attack-btn">
+          攻撃
+        </button>
 
-<div class="character-box">
+        <button id="skill-btn">
+          固有スキル
+        </button>
 
-<div id="enemySprite">
-</div>
+      </section>
 
-<div class="hpbar">
-<div id="enemyHpBar"
-class="hpfill enemy">
-</div>
-</div>
+      <!-- バトルログ -->
+      <section class="log">
 
-<div class="enemy-name"
-id="enemyName">
-敵
-</div>
+        <h3>バトルログ</h3>
 
-<div id="enemyStats"
-class="status-mini">
-</div>
+        <div id="battle-log"></div>
 
-</div>
+      </section>
 
-</div>
+    </main>
+  </div>
 
-<!-- =========================
-INFO
-========================= -->
-
-<div class="info-area">
-
-<div class="info-box">
-
-<b>アイテム</b>
-
-<div id="inventory"
-class="inventory-list">
-</div>
-
-</div>
-
-<div class="info-box">
-
-<b>装備</b>
-
-<div id="equipment">
-</div>
-
-</div>
-
-</div>
-
-<!-- =========================
-LOG
-========================= -->
-
-<div id="log"
-class="panel log">
-戦闘開始！
-</div>
-
-<!-- =========================
-BOTTOM
-========================= -->
-
-<div class="bottom-area">
-
-<button id="attackBtn"
-onclick="attack()">
-攻撃
-</button>
-
-<button id="itemBtn"
-class="item-btn"
-onclick="toggleItems()">
-アイテム
-</button>
-
-<div id="itemArea"
-style="display:none;">
-
-<button
-onclick="usePotion()">
-回復薬
-</button>
-
-<button
-onclick="useBomb()">
-爆薬
-</button>
-
-<button
-onclick="closeItemArea()">
-戻る
-</button>
-
-</div>
-
-<div id="choiceArea"
-class="choice"
-style="display:none;">
-</div>
-
-</div>
-
-<div id="resultArea"
-style="display:none;">
-
-<button
-onclick="returnToMenu()">
-メインメニューへ
-</button>
-
-</div>
-
-</div>
-
-<!-- =========================
-HELP
-========================= -->
-
-<div id="helpScene"
-class="scene">
-
-<div class="help-panel panel">
-
-<h2>ヘルプ / 図鑑</h2>
-
-<div class="help-scroll">
-
-<h3>行動説明</h3>
-
-<p>
-【成長】<br>
-能力を強化する
-</p>
-
-<p>
-【休息】<br>
-HPを大きく回復
-</p>
-
-<p>
-【採取】<br>
-アイテムや装備を発見
-</p>
-
-<p>
-【時巡り】<br>
-5階層戻る代わりにHP全快<br>
-低確率で時の番人と遭遇
-</p>
-
-<p>
-【時空の渦】<br>
-何が起こるかわからない危険な現象<br>
-低確率で時の番人と遭遇
-</p>
-
-<h3>アイテム</h3>
-
-<p>
-【回復薬】<br>
-HPを20回復
-</p>
-
-<p>
-【爆薬】<br>
-敵へ20ダメージ
-</p>
-
-<h3>武器</h3>
-
-<p>
-木の剣 +1<br>
-鉄の剣 +2<br>
-鋼の剣 +3<br>
-伝説の剣 +4
-</p>
-
-<h3>防具</h3>
-
-<p>
-木の鎧 +1<br>
-鉄の鎧 +2<br>
-鋼の鎧 +3<br>
-伝説の鎧 +4
-</p>
-
-</div>
-
-<button
-onclick="closeHelp()">
-戻る
-</button>
-
-</div>
-</div>
-
-<script src="script.js">
-</script>
+  <script
+    type="module"
+    src="app.js">
+  </script>
 
 </body>
 </html>
