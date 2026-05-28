@@ -1,115 +1,121 @@
 /* =====================
-   リザルト表示
+   結果画面表示
 ===================== */
 
-export function showBattleResult({
+export function showResult({
 
-  resultScreenId,
+  title,
 
-  titleId,
+  message,
 
-  rewardId,
-
-  isWin,
-
-  enemyMonster
+  reward
 
 }) {
 
-  const resultScreen =
-    document.getElementById(
-      resultScreenId
+  const resultHtml = `
+
+    <div class="result-overlay">
+
+      <div class="result-card">
+
+        <h2>
+          ${title}
+        </h2>
+
+        <p>
+          ${message}
+        </p>
+
+        <p class="reward-text">
+          ${reward}
+        </p>
+
+        <button id="result-close-btn">
+
+          OK
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  document.body.insertAdjacentHTML(
+
+    "beforeend",
+
+    resultHtml
+
+  );
+
+  /* 閉じる */
+
+  document.getElementById(
+    "result-close-btn"
+  ).onclick = () => {
+
+    closeResult();
+  };
+}
+
+/* =====================
+   結果閉じる
+===================== */
+
+export function closeResult() {
+
+  const overlay =
+
+    document.querySelector(
+      ".result-overlay"
     );
 
-  const title =
-    document.getElementById(
-      titleId
-    );
+  if (overlay) {
 
-  const reward =
-    document.getElementById(
-      rewardId
-    );
-
-  /* 表示 */
-
-  resultScreen.style.display =
-    "block";
-
-  /* =====================
-     勝利
-  ===================== */
-
-  if (isWin) {
-
-    title.textContent =
-      "勝利！";
-
-    reward.textContent =
-      `${enemyMonster.name}
-      をテイムした！`;
-
-    return;
+    overlay.remove();
   }
-
-  /* =====================
-     敗北
-  ===================== */
-
-  title.textContent =
-    "敗北...";
-
-  reward.textContent =
-    "モンスターを逃した...";
 }
 
 /* =====================
-   リザルト非表示
+   勝利結果
 ===================== */
 
-export function hideBattleResult(
+export function showVictory({
 
-  resultScreenId
-
-) {
-
-  document.getElementById(
-    resultScreenId
-  ).style.display =
-    "none";
-}
-
-/* =====================
-   リザルトボタン
-===================== */
-
-export function initializeResultButtons({
-
-  retryButtonId,
-
-  menuButtonId,
-
-  onRetry,
-
-  onMenu
+  gold
 
 }) {
 
-  /* リトライ */
+  showResult({
 
-  document.getElementById(
-    retryButtonId
-  ).onclick = () => {
+    title:
+      "勝利！",
 
-    onRetry();
-  };
+    message:
+      "モンスターを撃破した！",
 
-  /* メニュー */
+    reward:
+      `${gold}G 獲得`
+  });
+}
 
-  document.getElementById(
-    menuButtonId
-  ).onclick = () => {
+/* =====================
+   敗北結果
+===================== */
 
-    onMenu();
-  };
+export function showDefeat() {
+
+  showResult({
+
+    title:
+      "敗北...",
+
+    message:
+      "モンスターに敗北した。",
+
+    reward:
+      "再挑戦しよう"
+  });
 }
