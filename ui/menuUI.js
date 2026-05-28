@@ -1,108 +1,42 @@
-/* =====================
-   メニュー表示
-===================== */
-
 export function showMenu() {
+  hideAllScreens();
 
-  document.getElementById(
-    "menu-screen"
-  ).classList.add(
-    "active"
-  );
+  const menu = document.getElementById("menu-screen");
+  if (menu) menu.classList.add("active");
 }
-
-/* =====================
-   メニュー非表示
-===================== */
 
 export function hideMenu() {
-
-  document.getElementById(
-    "menu-screen"
-  ).classList.remove(
-    "active"
-  );
+  const menu = document.getElementById("menu-screen");
+  if (menu) menu.classList.remove("active");
 }
 
 /* =====================
-   メニューボタン初期化
-===================== */
-
-export function initializeMenu({
-
-  onBattle,
-
-  onGacha,
-
-  onHome,
-
-  onCollection
-
-}) {
-
-  /* =====================
-     モンスターテイム
-  ===================== */
-
-  document.getElementById(
-    "menu-battle"
-  ).onclick = () => {
-
-    onBattle();
-  };
-
-  /* =====================
-     ガチャ
-  ===================== */
-
-  document.getElementById(
-    "menu-gacha"
-  ).onclick = () => {
-
-    onGacha();
-  };
-
-  /* =====================
-     マイホーム
-  ===================== */
-
-  document.getElementById(
-    "menu-home"
-  ).onclick = () => {
-
-    onHome();
-  };
-
-  /* =====================
-     図鑑
-  ===================== */
-
-  document.getElementById(
-    "menu-collection"
-  ).onclick = () => {
-
-    onCollection();
-  };
-}
-
-/* =====================
-   画面切り替え
+   画面全部消す
 ===================== */
 
 export function hideAllScreens() {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+}
 
-  const screens =
+/* =====================
+   ボタン初期化
+===================== */
 
-    document.querySelectorAll(
-      ".screen"
-    );
+export function initializeMenu({
+  onBattle,
+  onGacha,
+  onHome,
+  onCollection
+}) {
+  const battleBtn = document.getElementById("menu-battle");
+  const gachaBtn = document.getElementById("menu-gacha");
+  const homeBtn = document.getElementById("menu-home");
+  const collectionBtn = document.getElementById("menu-collection");
 
-  screens.forEach(
-    (screen) => {
-
-      screen.classList.remove(
-        "active"
-      );
-    }
-  );
+  if (battleBtn) battleBtn.onclick = onBattle;
+  if (gachaBtn) gachaBtn.onclick = onGacha;
+  if (homeBtn) homeBtn.onclick = onHome;
+  if (collectionBtn) collectionBtn.onclick = onCollection;
 }
