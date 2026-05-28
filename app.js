@@ -1,331 +1,558 @@
-import { monsters }
-  from './data/monsters.js';
+import {
 
-import { calculateDamage }
-  from './systems/battle.js';
+  monsters
 
-/* =====================
-   モンスター生成
-===================== */
-
-const player =
-  structuredClone(monsters[0]);
-
-const enemy =
-  structuredClone(monsters[1]);
-
-/* =====================
-   ゲージ変数
-===================== */
-
-let currentMultiplier = 1;
-
-let gauge = 0;
-
-let gaugeDirection = 1;
-
-let gaugeActive = false;
-
-/* =====================
-   DOM取得
-===================== */
-
-const gaugeBar =
-  document.getElementById("gauge-bar");
-
-const multiplierText =
-  document.getElementById("multiplier-text");
-
-const stopBtn =
-  document.getElementById("stop-btn");
-
-const battleLog =
-  document.getElementById("battle-log");
-
-/* =====================
-   ログ表示
-===================== */
-
-function log(text) {
-
-  battleLog.innerHTML += `
-    <p>${text}</p>
-  `;
-
-  battleLog.scrollTop =
-    battleLog.scrollHeight;
 }
+from "./data/monsters.js";
+
+import {
+
+  loadGame,
+
+  saveGame,
+
+  addGold,
+
+  addMonster
+
+}
+from "./systems/save.js";
+
+import {
+
+  initializeBattle,
+
+  playerAttack,
+
+  enemyAttack,
+
+  beginPlayerGauge
+
+}
+from "./systems/battle.js";
+
+import {
+
+  executeGacha
+
+}
+from "./systems/gacha.js";
+
+import {
+
+  showMenu,
+
+  initializeMenu,
+
+  hideAllScreens
+
+}
+from "./ui/menuUI.js";
+
+import {
+
+  showTitle,
+
+  hideTitle,
+
+  initializeTitle,
+
+  playTitleEffect
+
+}
+from "./ui/titleUI.js";
+
+import {
+
+  renderBattleMonsters,
+
+  updateHpUI,
+
+  clearBattleLog,
+
+  appendBattleLog,
+
+  showBattleScreen
+
+}
+from "./ui/battleUI.js";
+
+import {
+
+  renderCollection,
+
+  showCollection
+
+}
+from "./ui/collectionUI.js";
+
+import {
+
+  showGachaResult,
+
+  showGachaScreen,
+
+  clearGachaResult
+
+}
+from "./ui/gachaUI.js";
+
+import {
+
+  renderHome,
+
+  showHomeScreen
+
+}
+from "./ui/homeUI.js";
+
+import {
+
+  showVictory,
+
+  showDefeat
+
+}
+from "./ui/resultUI.js";
 
 /* =====================
-   最大HP保持
+   セーブデータ
 ===================== */
 
-player.maxHp = player.hp;
-
-enemy.maxHp = enemy.hp;
+const playerData =
+  loadGame();
 
 /* =====================
-   UI更新
+   タイトル
 ===================== */
 
-function updateUI() {
+playTitleEffect();
 
-  /* プレイヤー */
+initializeTitle({
 
-  document.getElementById(
-    "player-name"
-  ).textContent =
-    player.name;
+  onStart: () => {
 
-  document.getElementById(
-    "player-rank"
-  ).textContent =
-    player.rank;
+    hideAllScreens();
 
-  document.getElementById(
-    "player-desc"
-  ).textContent =
-    player.description;
+    showMenu();
+  }
+
+});
+
+/* =====================
+   メニュー
+===================== */
+
+initializeMenu({
+
+  /* =====================
+     バトル
+  ===================== */
+
+  onBattle: () => {
+
+    startBattleMode();
+  },
+
+  /* =====================
+     ガチャ
+  ===================== */
+
+  onGacha: () => {
+
+    openGacha();
+  },
+
+  /* =====================
+     ホーム
+  ===================== */
+
+  onHome: () => {
+
+    openHome();
+  },
+
+  /* =====================
+     図鑑
+  ===================== */
+
+  onCollection: () => {
+
+    openCollection();
+  }
+
+});
+
+/* =====================
+   バトル開始
+===================== */
+
+let currentBattle = null;
+
+function startBattleMode() {
+
+  hideAllScreens();
+
+  showBattleScreen();
+
+  clearBattleLog();
+
+  /* 自分 */
+
+  const playerMonster =
+
+    monsters.find(
+      (monster) => {
+
+        return (
+
+          monster.id ===
+          playerData.party[0]
+
+        );
+      }
+    );
 
   /* 敵 */
 
-  document.getElementById(
-    "enemy-name"
-  ).textContent =
-    enemy.name;
+  const enemyMonster =
 
-  document.getElementById(
-    "enemy-rank"
-  ).textContent =
-    enemy.rank;
+    monsters[
+      Math.floor(
+        Math.random()
+        *
+        monsters.length
+      )
+    ];
 
-  document.getElementById(
-    "enemy-desc"
-  ).textContent =
-    enemy.description;
+  /* 初期化 */
 
-  /* HP表示 */
+  currentBattle =
 
-  document.getElementById(
-    "player-hp-text"
-  ).textContent =
-    `HP: ${player.hp} / ${player.maxHp}`;
+    initializeBattle({
 
-  document.getElementById(
-    "enemy-hp-text"
-  ).textContent =
-    `HP: ${enemy.hp} / ${enemy.maxHp}`;
+      player:
+        structuredClone(
+          playerMonster
+        ),
 
-  /* HPバー */
+      enemy:
+        structuredClone(
+          enemyMonster
+        ),
 
-  document.getElementById(
-    "player-hp-fill"
-  ).style.width =
-    `${(player.hp / player.maxHp) * 100}%`;
+      gaugeBarId:
+        "gauge-bar",
 
-  document.getElementById(
-    "enemy-hp-fill"
-  ).style.width =
-    `${(enemy.hp / enemy.maxHp) * 100}%`;
+      multiplierTextId:
+        "multiplier-text"
+
+    });
+
+  /* 描画 */
+
+  renderBattleMonsters({
+
+    player:
+      currentBattle.player,
+
+    enemy:
+      currentBattle.enemy
+
+  });
+
+  updateHpUI({
+
+    player:
+      currentBattle.player,
+
+    enemy:
+      currentBattle.enemy
+
+  });
+
+  appendBattleLog(
+
+    "戦闘開始！"
+
+  );
+
+  /* ゲージ開始 */
+
+  beginPlayerGauge({
+
+    gaugeBarId:
+      "gauge-bar",
+
+    multiplierTextId:
+      "multiplier-text"
+
+  });
 }
 
 /* =====================
-   ゲージ開始
-===================== */
-
-function startGauge(callback) {
-
-  if (gaugeActive) return;
-
-  gaugeActive = true;
-
-  gauge = 0;
-
-  gaugeDirection = 1;
-
-  const interval = setInterval(() => {
-
-    gauge +=
-      gaugeDirection *
-      (1 + gauge * 0.03);
-
-    /* 最大 */
-
-    if (gauge >= 100) {
-
-      gauge = 100;
-
-      gaugeDirection = -1;
-    }
-
-    /* 最小 */
-
-    if (gauge <= 0) {
-
-      gauge = 0;
-
-      gaugeDirection = 1;
-    }
-
-    /* ゲージ描画 */
-
-    gaugeBar.style.width =
-      `${gauge}%`;
-
-    /* 倍率 */
-
-    currentMultiplier =
-      1 + (gauge / 100) * 4;
-
-    multiplierText.textContent =
-      `倍率: x${currentMultiplier.toFixed(1)}`;
-
-  }, 16);
-
-  /* STOP */
-
-  stopBtn.onclick = () => {
-
-    clearInterval(interval);
-
-    gaugeActive = false;
-
-    callback(currentMultiplier);
-  };
-}
-
-/* =====================
-   敵ターン
-===================== */
-
-function enemyTurn() {
-
-  setTimeout(() => {
-
-    const aiMultiplier =
-      1 + Math.random() * 4;
-
-    const damage =
-      calculateDamage(
-        enemy,
-        player,
-        aiMultiplier
-      );
-
-    player.hp -= damage;
-
-    player.hp =
-      Math.max(0, player.hp);
-
-    log(`
-      ${enemy.name}
-      の攻撃！
-      ${damage}ダメージ！
-    `);
-
-    updateUI();
-
-    /* 敗北 */
-
-    if (player.hp <= 0) {
-
-      log("敗北...");
-    }
-
-  }, 1200);
-}
-
-/* =====================
-   通常攻撃
+   STOPボタン
 ===================== */
 
 document.getElementById(
-  "attack-btn"
-).onclick = () => {
+  "stop-btn"
+).onclick = async () => {
 
-  startGauge((multiplier) => {
+  /* プレイヤー攻撃 */
 
-    const damage =
-      calculateDamage(
-        player,
-        enemy,
-        multiplier
-      );
+  const result =
 
-    enemy.hp -= damage;
+    playerAttack({
 
-    enemy.hp =
-      Math.max(0, enemy.hp);
+      battleData:
+        currentBattle,
 
-    log(`
-      ${player.name}
-      の攻撃！
-      ${damage}ダメージ！
-    `);
+      logElementId:
+        "battle-log"
 
-    updateUI();
+    });
 
-    /* 勝利 */
+  updateHpUI({
 
-    if (enemy.hp <= 0) {
+    player:
+      currentBattle.player,
 
-      log("勝利！");
+    enemy:
+      currentBattle.enemy
 
-      return;
-    }
+  });
 
-    enemyTurn();
+  /* 勝利 */
+
+  if (result.finished) {
+
+    showVictory({
+
+      gold: 100
+
+    });
+
+    addGold({
+
+      saveData:
+        playerData,
+
+      amount: 100
+
+    });
+
+    addMonster({
+
+      saveData:
+        playerData,
+
+      monsterId:
+        currentBattle.enemy.id
+
+    });
+
+    return;
+  }
+
+  /* 敵ターン */
+
+  await delay(1000);
+
+  const enemyResult =
+
+    enemyAttack({
+
+      battleData:
+        currentBattle,
+
+      logElementId:
+        "battle-log"
+
+    });
+
+  updateHpUI({
+
+    player:
+      currentBattle.player,
+
+    enemy:
+      currentBattle.enemy
+
+  });
+
+  /* 敗北 */
+
+  if (enemyResult.finished) {
+
+    showDefeat();
+
+    return;
+  }
+
+  /* 再開 */
+
+  beginPlayerGauge({
+
+    gaugeBarId:
+      "gauge-bar",
+
+    multiplierTextId:
+      "multiplier-text"
+
   });
 };
 
 /* =====================
-   スキル攻撃
+   ガチャ
 ===================== */
 
+function openGacha() {
+
+  hideAllScreens();
+
+  showGachaScreen();
+
+  clearGachaResult();
+}
+
 document.getElementById(
-  "skill-btn"
+  "gacha-btn"
 ).onclick = () => {
 
-  startGauge((multiplier) => {
+  const result =
 
-    const damage =
-      calculateDamage(
-        player,
-        enemy,
-        multiplier * 1.3
-      );
+    executeGacha({
 
-    enemy.hp -= damage;
+      playerData
+    });
 
-    enemy.hp =
-      Math.max(0, enemy.hp);
+  /* 失敗 */
 
-    log(`
-      ${player.name}
-      の
-      ${player.skill}！
-      ${damage}ダメージ！
-    `);
+  if (!result.success) {
 
-    updateUI();
+    alert(
+      result.message
+    );
 
-    /* 勝利 */
+    return;
+  }
 
-    if (enemy.hp <= 0) {
+  showGachaResult({
 
-      log("勝利！");
-
-      return;
-    }
-
-    enemyTurn();
+    monster:
+      result.monster
   });
 };
 
 /* =====================
-   初期化
+   ホーム
 ===================== */
 
-updateUI();
+function openHome() {
 
-log("幻界大戦 Ver1 開始");
+  hideAllScreens();
+
+  showHomeScreen();
+
+  const partyMonsters =
+
+    monsters.filter(
+      (monster) => {
+
+        return (
+
+          playerData.party.includes(
+            monster.id
+          )
+
+        );
+      }
+    );
+
+  renderHome({
+
+    playerData,
+
+    partyMonsters
+
+  });
+}
+
+/* =====================
+   図鑑
+===================== */
+
+function openCollection() {
+
+  hideAllScreens();
+
+  showCollection();
+
+  renderCollection({
+
+    playerData
+  });
+}
+
+/* =====================
+   戻るボタン
+===================== */
+
+document.getElementById(
+  "battle-back-btn"
+).onclick = () => {
+
+  hideAllScreens();
+
+  showMenu();
+};
+
+document.getElementById(
+  "gacha-back-btn"
+).onclick = () => {
+
+  hideAllScreens();
+
+  showMenu();
+};
+
+document.getElementById(
+  "home-back-btn"
+).onclick = () => {
+
+  hideAllScreens();
+
+  showMenu();
+};
+
+document.getElementById(
+  "collection-back-btn"
+).onclick = () => {
+
+  hideAllScreens();
+
+  showMenu();
+};
+
+/* =====================
+   待機
+===================== */
+
+function delay(ms) {
+
+  return new Promise(
+    (resolve) => {
+
+      setTimeout(
+        resolve,
+        ms
+      );
+    }
+  );
+}
+
+/* =====================
+   初期画面
+===================== */
+
+showTitle();
