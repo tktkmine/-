@@ -6,15 +6,20 @@ export const worlds = {
 
   fire: {
 
-    name: "焔界",
+    id: "fire",
 
-    theme:
-      "灼熱の炎と火山が支配する戦乱世界。",
+    name: "焔界",
 
     color: "#ef4444",
 
     description:
-      "巨大火山群によって形成された炎の世界。強大な攻撃力を誇るモンスターが多い。"
+      "灼熱の火山地帯が広がる炎の世界。",
+
+    strongAgainst:
+      "nature",
+
+    weakAgainst:
+      "water"
   },
 
   /* =====================
@@ -23,15 +28,20 @@ export const worlds = {
 
   nature: {
 
-    name: "森界",
+    id: "nature",
 
-    theme:
-      "生命と自然が循環する精霊世界。",
+    name: "森界",
 
     color: "#22c55e",
 
     description:
-      "無限森林が広がる自然世界。耐久力や回復力に優れたモンスターが存在する。"
+      "精霊と巨木が生きる自然世界。",
+
+    strongAgainst:
+      "water",
+
+    weakAgainst:
+      "fire"
   },
 
   /* =====================
@@ -40,15 +50,20 @@ export const worlds = {
 
   water: {
 
-    name: "海界",
+    id: "water",
 
-    theme:
-      "深海文明が眠る蒼海世界。",
+    name: "海界",
 
     color: "#3b82f6",
 
     description:
-      "巨大海洋に覆われた水の世界。柔軟で安定した能力を持つモンスターが多い。"
+      "深海文明が眠る蒼海世界。",
+
+    strongAgainst:
+      "fire",
+
+    weakAgainst:
+      "thunder"
   },
 
   /* =====================
@@ -57,15 +72,20 @@ export const worlds = {
 
   thunder: {
 
-    name: "雷界",
+    id: "thunder",
 
-    theme:
-      "雷鳴轟く超機械文明世界。",
+    name: "雷界",
 
     color: "#eab308",
 
     description:
-      "超高速文明が発達した雷の世界。素早さに特化したモンスターが多い。"
+      "雷鳴と機械文明が支配する世界。",
+
+    strongAgainst:
+      "water",
+
+    weakAgainst:
+      "earth"
   },
 
   /* =====================
@@ -74,15 +94,20 @@ export const worlds = {
 
   earth: {
 
-    name: "岩界",
+    id: "earth",
 
-    theme:
-      "古代遺跡と巨岩が眠る大地世界。",
+    name: "岩界",
 
     color: "#a16207",
 
     description:
-      "古代文明の遺跡が点在する岩の世界。防御性能に優れたモンスターが多い。"
+      "古代遺跡と巨岩が眠る大地世界。",
+
+    strongAgainst:
+      "thunder",
+
+    weakAgainst:
+      "nature"
   }
 
 };
