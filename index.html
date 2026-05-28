@@ -1,127 +1,320 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>幻界大戦</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  />
+
 </head>
 
 <body>
-  <div id="app">
 
-    <header>
-      <h1>幻界大戦</h1>
-      <p class="subtitle">GENKAI TAISEN</p>
-    </header>
+  <!-- =====================
+       タイトル画面
+  ====================== -->
 
-    <main id="battle-screen">
+  <section
+    id="title-screen"
+    class="screen active"
+  >
 
-      <!-- 敵モンスター -->
-      <section class="monster enemy">
+    <h1 id="game-title">
+      幻界大戦
+    </h1>
 
-        <h2 id="enemy-name">
-          敵モンスター
-        </h2>
+    <p class="subtitle">
+      5つの世界が争うモンスター戦争
+    </p>
 
-        <div class="rank" id="enemy-rank">
-          A
-        </div>
+    <button id="start-btn">
+      GAME START
+    </button>
 
-        <div class="hp-bar">
-          <div
-            id="enemy-hp-fill"
-            class="hp-fill">
-          </div>
-        </div>
+  </section>
 
-        <p id="enemy-hp-text">
-          HP: 100 / 100
-        </p>
+  <!-- =====================
+       メインメニュー
+  ====================== -->
 
-        <p
-          id="enemy-desc"
-          class="description">
-        </p>
+  <section
+    id="menu-screen"
+    class="screen"
+  >
 
-      </section>
+    <h2>
+      メインメニュー
+    </h2>
 
-      <!-- ゲージ -->
-      <section class="gauge-section">
+    <div class="menu-buttons">
 
-        <div class="gauge-container">
-          <div id="gauge-bar"></div>
-        </div>
+      <button id="menu-battle">
+        モンスターテイム
+      </button>
 
-        <button id="stop-btn">
-          STOP
-        </button>
+      <button id="menu-gacha">
+        ガチャ
+      </button>
 
-        <p id="multiplier-text">
-          倍率: x1.0
-        </p>
+      <button id="menu-home">
+        マイホーム
+      </button>
 
-      </section>
+      <button id="menu-collection">
+        モンスター図鑑
+      </button>
 
-      <!-- プレイヤー -->
-      <section class="monster player">
+    </div>
 
-        <h2 id="player-name">
-          プレイヤー
-        </h2>
+  </section>
 
-        <div class="rank" id="player-rank">
-          A
-        </div>
+  <!-- =====================
+       バトル画面
+  ====================== -->
 
-        <div class="hp-bar">
-          <div
-            id="player-hp-fill"
-            class="hp-fill">
-          </div>
-        </div>
+  <section
+    id="battle-screen"
+    class="screen"
+  >
 
-        <p id="player-hp-text">
-          HP: 100 / 100
-        </p>
+    <h2>
+      モンスターテイム
+    </h2>
 
-        <p
-          id="player-desc"
-          class="description">
-        </p>
+    <!-- プレイヤー -->
 
-      </section>
+    <div class="battle-card">
 
-      <!-- 行動ボタン -->
-      <section class="actions">
+      <h3 id="player-name">
+        プレイヤー
+      </h3>
 
-        <button id="attack-btn">
-          攻撃
-        </button>
+      <p id="player-rank">
+        Rank
+      </p>
 
-        <button id="skill-btn">
-          固有スキル
-        </button>
+      <p id="player-desc">
+        Description
+      </p>
 
-      </section>
+      <div class="hp-bar">
 
-      <!-- バトルログ -->
-      <section class="log">
+        <div
+          id="player-hp-fill"
+          class="hp-fill"
+        ></div>
 
-        <h3>バトルログ</h3>
+      </div>
 
-        <div id="battle-log"></div>
+      <p id="player-hp-text">
+        HP
+      </p>
 
-      </section>
+    </div>
 
-    </main>
-  </div>
+    <!-- ENEMY -->
+
+    <div class="battle-card enemy">
+
+      <h3 id="enemy-name">
+        Enemy
+      </h3>
+
+      <p id="enemy-rank">
+        Rank
+      </p>
+
+      <p id="enemy-desc">
+        Description
+      </p>
+
+      <div class="hp-bar">
+
+        <div
+          id="enemy-hp-fill"
+          class="hp-fill enemy-fill"
+        ></div>
+
+      </div>
+
+      <p id="enemy-hp-text">
+        HP
+      </p>
+
+    </div>
+
+    <!-- ゲージ -->
+
+    <div class="gauge-wrapper">
+
+      <div
+        id="gauge-bar"
+        class="gauge-bar"
+      ></div>
+
+    </div>
+
+    <p id="multiplier-text">
+      倍率: x1.0
+    </p>
+
+    <button id="stop-btn">
+      STOP
+    </button>
+
+    <!-- ログ -->
+
+    <div id="battle-log">
+
+    </div>
+
+    <!-- 戻る -->
+
+    <button id="battle-back-btn">
+
+      戻る
+
+    </button>
+
+  </section>
+
+  <!-- =====================
+       ガチャ画面
+  ====================== -->
+
+  <section
+    id="gacha-screen"
+    class="screen"
+  >
+
+    <h2>
+      ガチャ
+    </h2>
+
+    <button id="gacha-btn">
+      ガチャを引く
+    </button>
+
+    <div
+      id="gacha-result"
+      class="gacha-result"
+    >
+
+      <h3 id="gacha-monster-name">
+
+      </h3>
+
+      <p id="gacha-monster-rank">
+
+      </p>
+
+      <p id="gacha-monster-world">
+
+      </p>
+
+      <p id="gacha-monster-desc">
+
+      </p>
+
+    </div>
+
+    <button id="gacha-back-btn">
+
+      戻る
+
+    </button>
+
+  </section>
+
+  <!-- =====================
+       ホーム画面
+  ====================== -->
+
+  <section
+    id="home-screen"
+    class="screen"
+  >
+
+    <h2>
+      マイホーム
+    </h2>
+
+    <p id="home-player-name">
+
+    </p>
+
+    <p id="home-player-world">
+
+    </p>
+
+    <p id="home-player-gold">
+
+    </p>
+
+    <h3>
+      パーティ
+    </h3>
+
+    <div id="party-container">
+
+    </div>
+
+    <button id="home-back-btn">
+
+      戻る
+
+    </button>
+
+  </section>
+
+  <!-- =====================
+       図鑑
+  ====================== -->
+
+  <section
+    id="collection-screen"
+    class="screen"
+  >
+
+    <h2>
+      モンスター図鑑
+    </h2>
+
+    <div
+      id="collection-list"
+      class="collection-list"
+    >
+
+    </div>
+
+    <button id="collection-back-btn">
+
+      戻る
+
+    </button>
+
+  </section>
+
+  <!-- =====================
+       JS
+  ====================== -->
 
   <script
     type="module"
-    src="app.js">
-  </script>
+    src="./app.js"
+  ></script>
 
 </body>
+
 </html>
