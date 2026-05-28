@@ -1,98 +1,91 @@
 /* =====================
-   タイトル初期化
-===================== */
-
-export function initializeTitle({
-
-  startButtonId,
-
-  onStart
-
-}) {
-
-  const startButton =
-
-    document.getElementById(
-      startButtonId
-    );
-
-  startButton.onclick = () => {
-
-    onStart();
-  };
-}
-
-/* =====================
    タイトル表示
 ===================== */
 
-export function showTitle(
-
-  screenId
-
-) {
+export function showTitle() {
 
   document.getElementById(
-    screenId
-  ).style.display =
-    "flex";
+    "title-screen"
+  ).classList.add(
+    "active"
+  );
 }
 
 /* =====================
    タイトル非表示
 ===================== */
 
-export function hideTitle(
-
-  screenId
-
-) {
+export function hideTitle() {
 
   document.getElementById(
-    screenId
-  ).style.display =
-    "none";
+    "title-screen"
+  ).classList.remove(
+    "active"
+  );
+}
+
+/* =====================
+   スタートボタン初期化
+===================== */
+
+export function initializeTitle({
+
+  onStart
+
+}) {
+
+  document.getElementById(
+    "start-btn"
+  ).onclick = () => {
+
+    onStart();
+  };
 }
 
 /* =====================
    タイトル演出
 ===================== */
 
-export function animateTitle(
-
-  titleId
-
-) {
+export function playTitleEffect() {
 
   const title =
 
     document.getElementById(
-      titleId
+      "game-title"
     );
 
-  let scale = 1;
+  title.animate(
 
-  let direction = 1;
+    [
 
-  setInterval(() => {
+      {
 
-    scale +=
-      0.001 * direction;
+        transform:
+          "scale(1)"
+      },
 
-    /* 折り返し */
+      {
 
-    if (scale >= 1.03) {
+        transform:
+          "scale(1.05)"
+      },
 
-      direction = -1;
+      {
+
+        transform:
+          "scale(1)"
+      }
+
+    ],
+
+    {
+
+      duration: 2000,
+
+      iterations:
+        Infinity
+
     }
 
-    if (scale <= 1.0) {
-
-      direction = 1;
-    }
-
-    title.style.transform =
-      `scale(${scale})`;
-
-  }, 16);
+  );
 }
