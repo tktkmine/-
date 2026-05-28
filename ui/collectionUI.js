@@ -1,118 +1,125 @@
+import {
+
+  monsters
+
+}
+from "../data/monsters.js";
+
 /* =====================
-   コレクション表示
+   図鑑描画
 ===================== */
 
 export function renderCollection({
 
-  containerId,
-
-  monsters
+  playerData
 
 }) {
 
   const container =
+
     document.getElementById(
-      containerId
+      "collection-list"
     );
 
   /* 初期化 */
 
   container.innerHTML = "";
 
+  /* 所持一覧 */
+
+  const ownedIds =
+    playerData.collection;
+
   /* =====================
      モンスター描画
   ===================== */
 
-  monsters.forEach((monster) => {
-
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "monster-card";
-
-    card.innerHTML = `
-
-      <div class="monster-rank">
-        ${monster.rank}
-      </div>
-
-      <h3>
-        ${monster.name}
-      </h3>
-
-      <p>
-        ${monster.world}
-      </p>
-
-      <p>
-        ${monster.description}
-      </p>
-
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-/* =====================
-   属性フィルター
-===================== */
-
-export function filterByElement({
-
-  monsters,
-
-  element
-
-}) {
-
-  /* ALL */
-
-  if (element === "all") {
-
-    return monsters;
-  }
-
-  return monsters.filter(
+  monsters.forEach(
     (monster) => {
 
-      return (
-        monster.element
-        ===
-        element
+      const owned =
+
+        ownedIds.includes(
+          monster.id
+        );
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className =
+        "monster-card";
+
+      card.innerHTML = `
+
+        <div class="monster-rank">
+
+          ${monster.rank.toUpperCase()}
+
+        </div>
+
+        <h3>
+
+          ${
+            owned
+              ? monster.name
+              : "？？？？"
+          }
+
+        </h3>
+
+        <p>
+
+          ${
+            owned
+              ? monster.world
+              : "未発見"
+          }
+
+        </p>
+
+        <p>
+
+          ${
+            owned
+              ? monster.description
+              : "情報が存在しない。"
+          }
+
+        </p>
+
+      `;
+
+      container.appendChild(
+        card
       );
     }
   );
 }
 
 /* =====================
-   ランクフィルター
+   図鑑表示
 ===================== */
 
-export function filterByRank({
+export function showCollection() {
 
-  monsters,
+  document.getElementById(
+    "collection-screen"
+  ).classList.add(
+    "active"
+  );
+}
 
-  rank
+/* =====================
+   図鑑非表示
+===================== */
 
-}) {
+export function hideCollection() {
 
-  /* ALL */
-
-  if (rank === "all") {
-
-    return monsters;
-  }
-
-  return monsters.filter(
-    (monster) => {
-
-      return (
-        monster.rank
-        ===
-        rank
-      );
-    }
+  document.getElementById(
+    "collection-screen"
+  ).classList.remove(
+    "active"
   );
 }
